@@ -1,8 +1,6 @@
 #include <bits/stdc++.h>
 #include <iostream>
 using namespace std;
-#define mod 1000000007
-
 long long int fun(long long int a[], long long int n, long long int sum)
 {
     long long int dp[sum+1];
@@ -16,15 +14,9 @@ long long int fun(long long int a[], long long int n, long long int sum)
        {
          if(a[j]<=i)
          {
-
-            long long int value = dp[i-a[j]];
-            if(value !=INT_MAX && value+1<dp[i])
-            {
-
-                dp[i] = value+1;
-            }
+                if(dp[i-a[j]]!=INT_MAX)
+                dp[i] = min(dp[i],dp[i-a[j]]+1);
          }
-
        }
    }
     if(dp[sum]==INT_MAX)
@@ -33,7 +25,6 @@ long long int fun(long long int a[], long long int n, long long int sum)
     }
     return dp[sum];
 }
-
 int main()
 {
 	long long int n;
