@@ -17,7 +17,7 @@ int main()
             vec.push_back(i);
             s+=i--;
             e=temp-s;
-            if(!e)
+            if(e<=0)
             {
                 break;
             }
