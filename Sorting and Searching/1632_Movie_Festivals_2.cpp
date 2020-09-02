@@ -1,29 +1,48 @@
 #include <bits/stdc++.h>
-#define forn(i, n) for (long long int i = 0; i < n; i++)
 using namespace std;
+#define ll long long
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    int n, k; cin >> n >> k;
-    vector<pair<int, int>> v;
-    forn (i, n) {
-        int x, y; cin >> x >> y;
-        v.push_back({y, x});
-    }
-    sort (v.begin(), v.end());
-    int cnt = 0;
-    multiset <int> p;
-    forn (i, k) p.insert(0);
-    for (auto i:v) {
-        auto it = p.upper_bound(i.second);
-        if (it == p.begin())
-            continue;
-        it--;
-        cnt++;
-        p.erase(it);
-        p.insert(i.first);
-    }
-    cout << cnt << "\n";
+    ll n,k;
+    cin>>n>>k;
+    pair< ll,ll > p[n];
+    for(ll i=0;i<n;i++)
+    {
+    	ll a,b;
+    	cin>>a>>b;
+    	p[i]={b,a};
+	}
+	sort(p,p+n);
+	multiset< ll,greater<int> > s;
+	ll ans=0;
+	for(ll i=0;i<n;i++)
+	{
+		if(s.empty())
+		{
+			s.insert(p[i].first);
+			ans++;
+			k--;
+		}
+		else
+		{
+			auto it=s.lower_bound(p[i].second);
+			if(it==s.end())
+			{
+				if(k>0)
+				{
+					k--;
+					ans++;
+					s.insert(p[i].first);
+				}
+			}
+			else
+			{
+				s.erase(it);
+				s.insert(p[i].first);
+				ans++;
+			}
+		}
+	}
+	cout<<ans;
     return 0;
 }
