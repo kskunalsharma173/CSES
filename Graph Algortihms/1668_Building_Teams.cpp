@@ -29,7 +29,7 @@ bool bfs(long long int src)
 }
 bool isBipartite(long long int v)
 {
-    for(long long int i=0;i<=v;i++)
+    for(long long int i=1;i<=v;i++)
     {
         if(vis[i]==0 && !bfs(i))
         return false;
