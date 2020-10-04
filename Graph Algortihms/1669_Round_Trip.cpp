@@ -1,58 +1,5 @@
-
 #include <bits/stdc++.h>
-#include <iostream>
-using namespace std;
-long long int n;
-vector<vector<long long int>> g(n);
-vector<long long int> vis(n);
-bool bfs(long long int index, long long int parent, vector<long long int>& res)
-{
-    vis[i]=true;
-    res.push_back(i);
-    for(auto x: g[i])
-    {
-        if(!vis[x])
-        {
-            if(dfs(x, i, res))
-                return true;
-        }
-        else
-        {
-            if(x!=i)
-            {
-                res.push_back(x);
-                return true;
-            }
-        }
-    }
-    return false;
-}
-int main()
-{
-	long long int v,e;
-    cin>>v>>e;
-    while(e--)
-    {
-        long long int x,y;
-        cin>>x>>y;
-        x--;
-        y--;
-        g[x].push_back(y);
-        g[y].push_back(x);
-    }
-    memset(vis,-1,sizeof(vis));
-    for(int i=0;i<v;i++)
-    {
-        vector<long long int> res;
-        if(!vis[i])
-            dfs(i,-1,res);
-    }
-    return 0;
-}
 
-
-
-#include <bits/stdc++.h>
 using namespace std;
 
 using vi = vector<int>;
