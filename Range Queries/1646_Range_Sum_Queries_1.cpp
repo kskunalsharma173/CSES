@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 long long int getMid(long long int s, long long int e) { return s + (e -s)/2; }
+
 long long int getSumUtil(long long int *st, long long int ss, long long int se, long long int qs, long long int qe, long long int si)
 {
 	if (qs <= ss && qe >= se)
