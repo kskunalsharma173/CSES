@@ -1,108 +1,107 @@
-#include<bits/stdc++.h>
-#define fi(i,a,b) for(ll i = a; i < b; i++)
-#define fd(i,a,b) for(ll i = a; i >= b; i--)
-#define cfi(container,it) for(auto it = container.begin(); it != container.end(); it++)
-#define cfd(container,it) for(auto it = container.rbegin(); it != container.rend(); it++)
-#define vi vector<int>
-#define vll vector<ll>
-#define all(v) (v).begin(), (v).end()
-#define pii pair<int, int>
-#define pll pair<ll, ll>
-#define pb push_back
-
+#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
-using ll = long long;
-const int MOD = (int) 1e9 + 7;
-const int nax = (int) 2e5 + 20;
+long long int getmid(long long int ss, long long int se)
+{
+    return ss+(se-ss)/2;
+}
+long long int minval(long long int x, long long int y)
+{
+    return (x<y)?x:y;
+}
+long long int rmqutil(long long int *st, long long int ss, long long int se, long long int qs, long long int qe, long long int si)
+{
+    if(qs<=ss && qe>=se)
+    {
+        return st[si];
+    }
+    if(qs>se || qe<ss)
+    {
+        return INT_MAX;
+    }
+    long long int mid = getmid(ss,se);
+    return minval(rmqutil(st,ss,mid,qs,qe,2*si+1), rmqutil(st,mid+1,se,qs,qe,2*si+2));
+}
+long long int rmq(long long int *st, long long int n, long long int qs, long long int qe)
+{
+    if(qs<0 || qe>n-1 || qs>qe)
+    {
+        return -1;
+    }
+    return rmqutil(st,0,n-1,qs,qe,0);
+}
+long long int constructutil(long long int a[], long long int ss, long long int se, long long int *st, long long int si)
+{
+    if(se==ss)
+    {
+        st[si]=a[ss];
+        return a[ss];
+    }
+    long long int mid=getmid(ss,se);
+    st[si]=minval(constructutil(a,ss,mid,st,2*si+1), constructutil(a,mid+1,se,st,2*si+2));
+    return st[si];
+}
+long long int *construct(long long int a[], long long int n)
+{
+    long long int x = (long long int)(ceil(log2(n)));
+    long long int maxi = 2*(long long int)pow(2,x)-1;
+    long long int *st = new long long int[maxi];
+    constructutil(a,0,n-1,st,0);
+    return st;
+}
+void updateValue(long long int arr[],long long int* st, long long int ss,long long int se,  long long int index,long long int value,long long int node)
+{
+     if (index < ss || index > se)
+    {
+        return;
+    }
 
-int n, q;
-vi a, lo(3*nax), hi(3*nax), tree(3*nax);
+    if (ss == se)
+    {
+        arr[index] = value;
+        st[node] = value;
+    }
+    else {
+            long long int mid = getmid(ss, se);
 
-void init(int i, int l, int r) {
-	lo[i] = l;
-	hi[i] = r;
+            if (index >= ss && index <= mid)
+                updateValue(arr, st, ss, mid, index,
+                            value, 2 * node + 1);
+            else
+                updateValue(arr, st, mid + 1, se,
+                            index, value, 2 * node + 2);
 
-	if(l == r) {
-		return;
-	}
-
-	int m = (l + r)/2;
-	init(2*i, l, m);
-	init(2*i + 1, m + 1, r);
+            st[node] = min(st[2 * node + 1],
+                       st[2 * node + 2]);
+    }
+    return;
 }
 
-int merge(int u, int v) {
-	return min(u, v);
-}
-
-void build(int i) {
-	int l = lo[i], r = hi[i];
-	if(l == r) {
-		tree[i] = a[l];
-		return;
-	}
-
-	build(2*i);
-	build(2*i + 1);
-	tree[i] = merge(tree[2*i], tree[2*i + 1]);
-}
-
-void update(int i, int pos, int val) {
-	int l = lo[i], r = hi[i];
-	if(l == r && l == pos) {
-		tree[i] = val;
-		a[l] = val;
-		return;
-	}
-
-	int m = (l + r)/2;
-	if(pos <= m)
-		update(2*i, pos, val);
-	else
-		update(2*i + 1, pos, val);
-
-	tree[i] = merge(tree[2*i], tree[2*i + 1]);
-}
-
-int query(int i, int u, int v) {
-	int l = lo[i], r = hi[i];
-	if(v < l || u > r) {
-		return MOD;
-	}
-	if(u <= l && r <= v) {
-		return tree[i];
-	}
-
-	int leftChild = query(2*i, u, v);
-	int rightChild = query(2*i + 1, u, v);
-
-	return merge(leftChild, rightChild);
-}
-
-int main(){
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-
-	cin>>n>>q;
-	a.resize(n + 1);
-
-	fi(i, 1, n + 1) {
-		cin>>a[i];
-	}
-
-	init(1, 1, n);
-	build(1);
-
-
-	int op, u, v;
-	fi(i, 0, q) {
-		cin>>op>>u>>v;
-		if(op == 1) {
-			update(1, u, v);
-		} else {
-			cout<<query(1, u, v)<<'\n';
-		}
-	}
-
+int main()
+{
+	long long int n,q;
+    cin>>n>>q;
+    long long int a[n];
+    for(int i=0;i<n;i++)
+    {
+        cin>>a[i];
+    }
+    long long int *st=construct(a,n);
+    while(q--)
+    {
+        long long int x,y,z;
+        cin>>x>>y>>z;
+        y--;
+        if(x==2)
+        {
+             z--;
+             cout<<rmq(st,n,y,z)<<endl;
+        }
+        else
+        {
+             updateValue(a, st, 0, n-1, y, z, 0);
+       //     updateValue(a,st,n,y,z);
+        }
+    }
 	return 0;
 }
