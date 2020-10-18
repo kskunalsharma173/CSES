@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 long long int n,m, mat[1001][1001];
+int rowNbr[4] = {1,-1,0,0};
+int colNbr[4] = {0,0,-1,1};
 void dfs(long long int i, long long int j)
 {
     if(i<0 || i>=n || j<0 || j>=m)
@@ -11,10 +13,9 @@ void dfs(long long int i, long long int j)
         return;
     }
     mat[i][j]=0;
-    dfs(i+1,j);
-    dfs(i-1,j);
-    dfs(i,j-1);
-    dfs(i,j+1);
+    for (int x=0;x<4;x++) {
+		dfs (i+rowNbr[x],j+colNbr[x]);
+	}
 
 }
 int main()
